@@ -277,6 +277,7 @@ function print2eps(name, fig, export_options, varargin)
                 % Check if the axes look visually different onscreen when SortMethod='ChildOrder'
                 imgBefore = print2array(fig);
                 set(hAxes,'SortMethod','ChildOrder');
+                drawnow();
                 imgAfter  = print2array(fig);
                 if isequal(imgBefore, imgAfter)
                     % They look the same, so use SortMethod='ChildOrder' when generating the EPS
@@ -573,7 +574,7 @@ function print2eps(name, fig, export_options, varargin)
     fstrm = regexprep(fstrm, '\n([-\d.]+ [-\d.]+) ([-\d.]+ [-\d.]+) ([-\d.]+ [-\d.]+) 3 MP\nPP\n\3 \2 \1 3 MP\nPP\n','\n$1 $2 $3 0 0 4 MP\nPP\n');
 
     % If user requested a regexprep replacement of string(s), do this now (issue #324)
-    if isstruct(export_options) && isfield(export_options,'regexprep') %&& ~isempty(export_options.regexprep)
+    if isstruct(export_options) && isfield(export_options,'regexprep') && ~isempty(export_options.regexprep)
         try
             oldStrOrRegexp = export_options.regexprep{1};
             newStrOrRegexp = export_options.regexprep{2};

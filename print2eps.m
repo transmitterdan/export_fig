@@ -269,7 +269,7 @@ function print2eps(name, fig, export_options, varargin)
     % Note: this "may limit other functionality in plotting such as hidden line/surface removal"
     % reference: Technical Support Case #02838114, https://mail.google.com/mail/u/0/#inbox/15fb7659f70e7bd8
     hAxes = findall(fig, 'Type', 'axes');
-    if using_hg2 && ~isempty(hAxes)  % issue #211 presumably happens only in HG2, not HG1
+    if using_hg2 && ~isempty(hAxes) && ~export_options.silent % issue #211 presumably happens only in HG2, not HG1
         try
             % If there are any axes using SortMethod~='ChildOrder'
             oldSortMethods = get(hAxes,{'SortMethod'});  % use {'SortMethod'} to ensure we get a cell array, even for single axes
@@ -306,7 +306,7 @@ function print2eps(name, fig, export_options, varargin)
         options{end+1} = '-depsc2';
         % Issue a warning if multiple images & lines were found in the figure, and HG1 with painters renderer is used
         isPainters = any(strcmpi(options,'-painters'));
-        if isPainters && ~using_hg2 && numel(findall(fig,'Type','image'))>1 && ~isempty(findall(fig,'Type','line'))
+        if isPainters && ~using_hg2 && numel(findall(fig,'Type','image'))>1 && ~isempty(findall(fig,'Type','line')) && ~export_options.silent
             warning('YMA:export_fig:issue45', ...
                     ['Multiple images & lines detected. In such cases, the lines might \n' ...
                      'appear with an invalid color due to an internal MATLAB bug (fixed in R2014b). \n' ...
@@ -471,7 +471,7 @@ function print2eps(name, fig, export_options, varargin)
         for a = 1:size(font_swap, 2)
             fontName = font_swap{3,a};
             %fontName = fontName(~isspace(font_swap{3,a}));
-            if length(fontName) > 29
+            if length(fontName) > 29 && ~export_options.silent
                 warning('YMA:export_fig:font_name','Font name ''%s'' is longer than 29 characters. This might cause problems in some EPS/PDF readers. Consider using a different font.',fontName);
             end
             if isempty(font_space)
